@@ -1,0 +1,16 @@
+{
+  "shops": [
+    {
+      "name": "Outlet del cafe",
+      "url": "outletdelcafe.cl",
+      "method": "Shopify",
+      "scrapeLocation": "/productos"
+    },
+    {
+      "name": "Café Altura",
+      "url": "cafealtura.cl",
+      "method": "Woocommerce",
+      "scrapeLocation": "/productos"
+    }
+  ]
+}
