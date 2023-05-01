@@ -10,6 +10,32 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 
+const addUserDataToComments = async (comments: Comment[]) => {
+  const users = (
+    await clerkClient.users.getUserList({
+      userId: comments.map((comment) => comment.authorId),
+      limit: 100,
+    })
+  ).map(filterUserForClient);
+
+  return comments.map((comment) => {
+    const author = users.find((user) => user.id === comment.authorId);
+    if (!author || !author.username)
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Author not found",
+      });
+
+    return {
+      comment,
+      author: {
+        ...author,
+        username: author.username,
+      },
+    };
+  });
+};
+
 const filterUserForClient = (user: User) => {
   return {
     id: user.id,
@@ -19,32 +45,15 @@ const filterUserForClient = (user: User) => {
 };
 
 export const commentsRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async ({ ctx, input }) => {
-    const comments = await ctx.prisma.comment.findMany({
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    const comments: Comment[] = await ctx.prisma.comment.findMany({
       take: 20,
       orderBy: {
-        createdAt: "desc",
+        timestamp: "desc",
       },
     });
-    return ctx.prisma.comment.findMany();
+    return addUserDataToComments(comments);
   }),
-  //   getPostsByUserId: publicProcedure
-  //     .input(
-  //       z.object({
-  //         userId: z.string(),
-  //       })
-  //     )
-  //     .query(({ ctx, input }) =>
-  //       ctx.prisma.comment
-  //         .findMany({
-  //           where: {
-  //             authorId: input.userId,
-  //           },
-  //           take: 100,
-  //           orderBy: [{ createdAt: "desc" }],
-  //         })
-  //         .then(addUserDataToPosts)
-  //     ),
 
   create: privateProcedure
     .input(
@@ -58,10 +67,12 @@ export const commentsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const authorId = ctx.userId;
 
-      const comment = await ctx.prisma.product.create({
+      const comment = await ctx.prisma.comment.create({
         data: {
           authorId,
           content: input.content,
+          // CHANGE THIS
+          productId: 1,
         },
       });
       return comment;
