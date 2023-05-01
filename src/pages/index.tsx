@@ -1,18 +1,26 @@
+import { useUser } from "@clerk/nextjs/dist/client";
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { api } from "~/utils/api";
-import { scrapeProducts } from "~/utils/scrapeWebsite";
+import { scrapeWebsiteShopify, testFx } from "~/utils/scrapeWebsite";
 
 export function getStaticProps() {
-  const info = scrapeProducts("google.com");
-  console.log("hello world");
-  return { props: info };
+  testFx();
+  console.log("get XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+  return { props: { x: 1 } };
 }
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
   getStaticProps();
+  // Consigo el contexto de todo (DB, productos y SignIn)
+  const ctx = api.useContext();
+
+  // Consigo el usuario esta logeado y si ha cargado con Clerk
+  const { isLoaded: userLoaded, isSignedIn } = useUser();
+
+  // Fetch lo antes posible
+  api.products.getAll.useQuery();
 
   return (
     <>

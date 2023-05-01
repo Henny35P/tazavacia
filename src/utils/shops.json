@@ -4,7 +4,13 @@
       "name": "Outlet del cafe",
       "url": "outletdelcafe.cl",
       "method": "Shopify",
-      "scrapeLocation": "/productos"
+      "scrapeLocation": "/products"
+    },
+    {
+      "name": "Coffee Culture Coffee Roasters",
+      "url": "coffeeculture.cl",
+      "method": "Shopify",
+      "scrapeLocation": "/collections/cafe/products"
     },
     {
       "name": "Café Altura",

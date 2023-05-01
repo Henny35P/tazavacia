@@ -1,3 +1,4 @@
+import data from "./shops.json";
 import { chromium, Browser, Page } from "playwright";
 
 interface Product {
@@ -6,12 +7,46 @@ interface Product {
   image: string;
   description: string;
 }
+interface Shop {
+  name: string;
+  url: string;
+  method: string;
+  scrapeLocation: string;
+}
 
-// export const scrapeWebsiteShopify = async (website: string) => {
-//   // leer json
-//   console.log("test");
-// };
-export async function scrapeProducts(website: string): Promise<Product[]> {
+interface Shops {
+  shops: Shop[];
+}
+
+//console.log(mydata);
+//console.log(mydata.shops[0]);
+export const testFx = async () => {
+  const mydata: Shops = data;
+  if (mydata.shops[0] === undefined) {
+    return "No hay datos";
+  }
+
+  await scrapeWebsiteShopify(mydata.shops[0]);
+};
+
+export const scrapeWebsiteShopify = async (shop: Shop) => {
+  // Consigo el json de los productos según la página
+  // Para esto, armo el url a usar con los datos de las páginas
+  const shopUrl = `https://${shop.url}${shop.scrapeLocation}.json`;
+  const shopPromise = await fetch(shopUrl);
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const productJson = await shopPromise.json();
+    // Ver que hacer con los datos obtenidos.
+  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    throw new Error(`Error al obtener los productos de ${shop.name}`);
+  }
+};
+
+export async function scrapeWebsiteWoocommerce(
+  website: string
+): Promise<Product[]> {
   const browser: Browser = await chromium.launch();
   const page: Page = await browser.newPage();
 
@@ -84,5 +119,5 @@ export async function scrapeProducts(website: string): Promise<Product[]> {
 
 // Usage example
 
-const products = await scrapeProducts("https://cafealtura.cl/productos");
-console.log(products);
+// const products = await scrapeProducts("https://cafealtura.cl/productos");
+// console.log(products);

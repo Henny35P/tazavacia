@@ -15,3 +15,40 @@ model Example {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
+
+model Store {
+    id             Int       @id @default(autoincrement())
+    name           String
+    url            String
+    scrapeLocation String
+    products       Product[]
+}
+
+model Product {
+    id          Int            @id @default(autoincrement())
+    name        String
+    store       Store          @relation(fields: [storeId], references: [id])
+    storeId     Int
+    description String?
+    imageUrl    String?
+    prices      ProductPrice[]
+    createdAt   DateTime       @default(now())
+    Comment     Comment[]
+}
+
+model ProductPrice {
+    id        Int      @id @default(autoincrement())
+    price     Float
+    timestamp DateTime @default(now())
+    product   Product  @relation(fields: [productId], references: [id])
+    productId Int
+}
+
+model Comment {
+    id        Int      @id @default(autoincrement())
+    content   String
+    timestamp DateTime @default(now())
+    product   Product  @relation(fields: [productId], references: [id])
+    productId Int
+    authorId  String
+}
