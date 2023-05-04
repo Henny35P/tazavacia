@@ -1,4 +1,4 @@
-import data from "./shops.json";
+import data from "./stores.json";
 import { chromium, Browser, Page } from "playwright";
 
 interface Product {
@@ -7,40 +7,40 @@ interface Product {
   image: string;
   description: string;
 }
-interface Shop {
+interface Store {
   name: string;
   url: string;
   method: string;
   scrapeLocation: string;
 }
 
-interface Shops {
-  shops: Shop[];
+interface Stores {
+  stores: Store[];
 }
 
 //console.log(mydata);
-//console.log(mydata.shops[0]);
+//console.log(mydata.stores[0]);
 export const testFx = async () => {
-  const mydata: Shops = data;
-  if (mydata.shops[0] === undefined) {
+  const mydata: Stores = data;
+  if (!mydata) {
     return "No hay datos";
   }
 
-  await scrapeWebsiteShopify(mydata.shops[0]);
+  // await scrapeWebsitestoreify(mydata.stores[0]);
 };
 
-export const scrapeWebsiteShopify = async (shop: Shop) => {
+export const scrapeWebsitestoreify = async (store: Store) => {
   // Consigo el json de los productos según la página
   // Para esto, armo el url a usar con los datos de las páginas
-  const shopUrl = `https://${shop.url}${shop.scrapeLocation}.json`;
-  const shopPromise = await fetch(shopUrl);
+  const storeUrl = `https://${store.url}${store.scrapeLocation}.json`;
+  const storePromise = await fetch(storeUrl);
   try {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const productJson = await shopPromise.json();
+    const productJson = await storePromise.json();
     // Ver que hacer con los datos obtenidos.
   } catch (error) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    throw new Error(`Error al obtener los productos de ${shop.name}`);
+    throw new Error(`Error al obtener los productos de ${store.name}`);
   }
 };
 

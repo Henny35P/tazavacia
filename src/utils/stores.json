@@ -1,22 +1,25 @@
 {
-  "shops": [
+  "stores": [
     {
       "name": "Outlet del cafe",
       "url": "outletdelcafe.cl",
+      "scrapeLocation": "/products",
       "method": "Shopify",
-      "scrapeLocation": "/products"
+      "imageUrl": ""
     },
     {
       "name": "Coffee Culture Coffee Roasters",
       "url": "coffeeculture.cl",
+      "scrapeLocation": "/collections/cafe/products",
       "method": "Shopify",
-      "scrapeLocation": "/collections/cafe/products"
+      "imageUrl": ""
     },
     {
       "name": "Café Altura",
       "url": "cafealtura.cl",
+      "scrapeLocation": "/productos",
       "method": "Woocommerce",
-      "scrapeLocation": "/productos"
+      "imageUrl": ""
     }
   ]
 }

@@ -21,6 +21,8 @@ model Store {
     name           String
     url            String
     scrapeLocation String
+    method         String
+    imageUrl       String?
     products       Product[]
 }
 
@@ -29,8 +31,8 @@ model Product {
     name        String
     store       Store          @relation(fields: [storeId], references: [id])
     storeId     Int
-    description String?
-    imageUrl    String?
+    description String
+    imageUrl    String
     prices      ProductPrice[]
     createdAt   DateTime       @default(now())
     Comment     Comment[]
