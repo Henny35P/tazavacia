@@ -1,4 +1,3 @@
-import data from "./stores.json";
 import { chromium, Browser, Page } from "playwright";
 
 interface Product {
@@ -18,21 +17,10 @@ interface Stores {
   stores: Store[];
 }
 
-//console.log(mydata);
-//console.log(mydata.stores[0]);
-export const testFx = async () => {
-  const mydata: Stores = data;
-  if (!mydata) {
-    return "No hay datos";
-  }
-
-  // await scrapeWebsitestoreify(mydata.stores[0]);
-};
-
-export const scrapeWebsitestoreify = async (store: Store) => {
+export const scrapeWebsiteShopify = async (store: Store) => {
   // Consigo el json de los productos según la página
   // Para esto, armo el url a usar con los datos de las páginas
-  const storeUrl = `https://${store.url}${store.scrapeLocation}.json`;
+  const storeUrl = `https://${store.url}${store.scrapeLocation}.json?limit=1000`;
   const storePromise = await fetch(storeUrl);
   try {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

@@ -4,20 +4,17 @@ import Head from "next/head";
 import Link from "next/link";
 import { ProductView } from "~/components/ProductView";
 import { api } from "~/utils/api";
-import { seedstores } from "~/utils/createStore";
-import { scrapeWebsiteShopify, testFx } from "~/utils/scrapeWebsite";
+// import { scrapeWebsiteShopify, testFx } from "~/utils/scrapeWebsite";
 
-export function getStaticProps() {
-  void seedstores();
-  console.log("get XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-  return { props: { x: 1 } };
-}
+// export function getStaticProps() {
+//   void seedstores();
+//   console.log("get XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+//   return { props: { x: 1 } };
+// }
 
 const ProductsList = () => {
   const { data, isLoading: productFetching } = api.products.getAll.useQuery();
-
   if (!data) return <div>No se encontraron productos!</div>;
-
   return (
     <div>
       {data.map((product) => (
@@ -28,7 +25,6 @@ const ProductsList = () => {
 };
 
 const Home: NextPage = () => {
-  // getStaticProps();
   // Consigo el contexto de todo (DB, productos y SignIn)
   const ctx = api.useContext();
 
