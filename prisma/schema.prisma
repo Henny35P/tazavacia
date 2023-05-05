@@ -18,7 +18,7 @@ model Example {
 
 model Store {
     id             Int       @id @default(autoincrement())
-    name           String
+    name           String    @unique
     url            String    @unique
     scrapeLocation String
     method         String
@@ -33,6 +33,7 @@ model Product {
     storeId     Int
     description String
     imageUrl    String
+    handle      String         @unique
     prices      ProductPrice[]
     createdAt   DateTime       @default(now())
     Comment     Comment[]
@@ -40,7 +41,7 @@ model Product {
 
 model ProductPrice {
     id        Int      @id @default(autoincrement())
-    price     Float
+    price     String
     timestamp DateTime @default(now())
     product   Product  @relation(fields: [productId], references: [id])
     productId Int

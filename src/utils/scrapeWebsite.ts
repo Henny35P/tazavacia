@@ -1,10 +1,16 @@
 import { chromium, Browser, Page } from "playwright";
+import productData from "./productsCafeoutlet.json";
+import { PrismaClient } from "@prisma/client";
+import { test } from "node:test";
+
+const prisma = new PrismaClient();
 
 interface Product {
   name: string;
   price: string;
-  image: string;
+  imageUrl: string;
   description: string;
+  handle: string;
 }
 interface Store {
   name: string;
@@ -96,8 +102,6 @@ export async function scrapeWebsiteWoocommerce(
     } catch (error) {
       console.log("error getting description:");
     }
-
-    products.push({ name, price, image, description });
   }
 
   await browser.close();
@@ -109,3 +113,64 @@ export async function scrapeWebsiteWoocommerce(
 
 // const products = await scrapeProducts("https://cafealtura.cl/productos");
 // console.log(products);
+
+const testingJson = async () => {
+  const storeName = "Outlet del café";
+  const store = await prisma.store.findUnique({
+    where: { name: storeName },
+  });
+
+  const products = productData;
+  for (const product of products.products) {
+    if (!product.variants[0]) {
+      return;
+    }
+
+    const price = product.variants[0].price;
+    const name = product.title;
+    const handle = product.handle;
+    const imageUrl = product.images[0]?.src ?? "";
+    const description = product.body_html;
+
+    await prisma.product.upsert({
+      // Identifico por URL
+      // Se crea o actualiza si ya existe
+      where: { handle: handle },
+      update: {
+        name: name,
+        handle: handle,
+        prices: {
+          create: [{ price: price }],
+        },
+        imageUrl: imageUrl,
+        description: description,
+      },
+
+      create: {
+        name: name,
+        handle: handle,
+        store: {
+          connect: { id: 2 },
+        },
+        prices: { create: [{ price: price }] },
+        imageUrl: imageUrl,
+        description: description,
+      },
+    });
+  }
+};
+
+const runScrape = () => {
+  testingJson()
+    .then(async () => {
+      await prisma.$disconnect();
+      console.log("Tiendas updateadas");
+    })
+    .catch(async (e) => {
+      console.error(e);
+      await prisma.$disconnect();
+      process.exit(1);
+    });
+};
+
+runScrape();

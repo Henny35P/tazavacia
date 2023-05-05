@@ -15,7 +15,7 @@ interface Stores {
   stores: Store[];
 }
 
-export async function seed() {
+export async function seedStores() {
   const mydata: Stores = storesData;
   for (const store of mydata.stores) {
     await prisma.store.upsert({
@@ -41,7 +41,7 @@ export async function seed() {
 }
 
 const runSeed = () => {
-  seed()
+  seedStores()
     .then(async () => {
       await prisma.$disconnect();
       console.log("Tiendas updateadas");
