@@ -115,7 +115,7 @@ export async function scrapeWebsiteWoocommerce(
 // console.log(products);
 
 const testingJson = async () => {
-  const storeName = "Outlet del café";
+  const storeName = "Outlet del cafe";
   const store = await prisma.store.findUnique({
     where: { name: storeName },
   });
@@ -150,7 +150,7 @@ const testingJson = async () => {
         name: name,
         handle: handle,
         store: {
-          connect: { id: 2 },
+          connect: { id: store?.id },
         },
         prices: { create: [{ price: price }] },
         imageUrl: imageUrl,
